@@ -77,10 +77,15 @@ function spawnTile() {
 
 function moveTiles() {
     if (!gameRunning) return;
+
+    // 점수에 따라 타일 속도 증가
+    const speedMultiplier = 1 + score * 0.05; // 점수 1당 5% 속도 증가
+    const currentSpeed = tileSpeed * speedMultiplier;
+
     for (let i = activeTiles.length - 1; i >= 0; i--) {
         const tile = activeTiles[i];
         let top = parseFloat(tile.style.top);
-        top += tileSpeed;
+        top += currentSpeed;
         tile.style.top = `${top}px`;
 
         if (top > 600) {
@@ -92,7 +97,6 @@ function moveTiles() {
         }
     }
 
-    tileSpeed += 0.005
     requestAnimationFrame(moveTiles);
 }
 
