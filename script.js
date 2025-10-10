@@ -92,7 +92,7 @@ function moveTiles() {
         }
     }
 
-    tileSpeed = 3 + score * 0.1;
+    tileSpeed += 0.005
     requestAnimationFrame(moveTiles);
 }
 
