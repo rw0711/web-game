@@ -9,7 +9,7 @@ const hardBtn = document.getElementById("hard");
 let keys = [];
 let heartCount = 5;
 let score = 0;
-let tileSpeed = 3;
+let tileSpeed = 2.5;
 let spawnInterval = 1000;
 let gameRunning = false;
 let activeTiles = [];
@@ -19,7 +19,7 @@ function setDifficulty(level) {
     keys = level === "easy" ? ["A", "S", "D", "F"] : ["A", "S", "D", "F", "H", "J", "K", "L"];
     heartCount = level === "easy" ? 5 : 3;
     score = 0;
-    tileSpeed = 3;
+    tileSpeed = 2.5;
     spawnInterval = 1000;
     gameRunning = true;
     updateHearts();
@@ -41,7 +41,14 @@ function endGame() {
 }
 
 function startGame() {
+    tileSpeed = 2.5; 
     if (gameLoop) clearInterval(gameLoop);
+    activeTiles = [];
+
+    // 게임 시작 시 여러 타일을 화면 위에 배치
+    for (let i = 0; i < 5; i++) {  // 화면 위에 초기 타일
+        spawnTile(-i * 100); // y 위치를 -80, -180, -280… 식으로
+    }
 
     gameLoop = setInterval(() => {
         if (!gameRunning) {
@@ -55,21 +62,21 @@ function startGame() {
     requestAnimationFrame(moveTiles);
 }
 
-function spawnTile() {
+// spawnTile 함수 수정 (옵션으로 시작 높이 지정 가능)
+function spawnTile(initialTop = -80) {
     const lane = Math.floor(Math.random() * keys.length);
     const tile = document.createElement("div");
     tile.classList.add("tile");
     tile.dataset.key = keys[lane];
 
-    // 키존의 실제 폭 기반으로 계산
     const zoneWidth = keyZone.clientWidth;
     const laneWidth = zoneWidth / keys.length;
-    const tileWidth = laneWidth * 0.9; // 키보다 살짝 작게
+    const tileWidth = laneWidth * 0.9;
     const offset = (laneWidth - tileWidth) / 2;
 
     tile.style.left = `${lane * laneWidth + offset}px`;
     tile.style.width = `${tileWidth}px`;
-    tile.style.top = "-80px";
+    tile.style.top = `${initialTop}px`; // 초기 높이 적용
 
     tileContainer.appendChild(tile);
     activeTiles.push(tile);
@@ -79,7 +86,7 @@ function moveTiles() {
     if (!gameRunning) return;
 
     // 점수에 따라 타일 속도 증가
-    const speedMultiplier = 1 + score * 0.05; // 점수 1당 5% 속도 증가
+    const speedMultiplier = 1 + score * 0.05; // 점수 1당 0.5% 속도 증가
     const currentSpeed = tileSpeed * speedMultiplier;
 
     for (let i = activeTiles.length - 1; i >= 0; i--) {
