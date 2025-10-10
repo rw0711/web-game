@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎹피아노 타일</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>🎹 피아노 타일</h1>
+    <div id="instructions">
+        <p>🎵 키보드로 타일을 눌러 점수를 얻으세요!</p>
+        <p>🟢 쉬움: A, S, D, F | 🔴 어려움: A, S, D, F, H, J, K, L</p>
+        <p>❤️ 타일을 놓치면 하트가 하나 깎입니다. 하트가 0이 되면 게임 오버!</p>
+    </div>
+
+    <div id="difficulty-select">
+        <button id="easy">쉬움</button>
+        <button id="hard">어려움</button>
+    </div>
+
+    <div id="game-container">
+        <div id="hearts"></div>
+        <div id="score">점수: 0</div>
+        <div id="tile-container"></div>
+        <div id="key-zone"></div>
+        <div id="keys"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
