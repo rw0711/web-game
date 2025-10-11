@@ -96,8 +96,14 @@ h1 {
     transition: background 0.15s, transform 0.15s;
 }
 
+#countdown {
+    text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b;
+    transition: opacity 0.3s;
+    }
+
 .key.active {
     background-color: #ff6b6b;
-    transform: scale(0.9);
     color: white;
+    transform: scale(0.9);
+    transition: all 0.s1;
 }
