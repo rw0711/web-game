@@ -39,7 +39,7 @@ function setDifficulty(level) {
     heartCount = level === "easy" ? 5 : 3;
     score = 0;
     tileSpeed = 2.5;
-    spawnInterval = 800;
+    spawnInterval = Math.max(400, 900 - score * 10);
     activeTiles = [];
     updateHearts();
     scoreDisplay.textContent = "점수: 0";
@@ -56,7 +56,6 @@ function setDifficulty(level) {
 
     startCountdown(level);
 }
-
 
 function startCountdown(level) {
     let count = 3;
@@ -97,31 +96,14 @@ function startGame(level) {
     gameRunning = true;
     tileSpeed = 2.5;
     activeTiles = [];
-    score = 0;
-    hearts = level === 'easy' ? 5 : 3;
-    updateHeartsDisplay();
-    updateScore();
 
-    // 타일 생성 루프 정리 (기존 setInterval 초기화)
-    if (spawnLoop) clearInterval(spawnLoop);
+    // 🎯 시작 시 자연스럽게 2~3개만 생성
+    const startCount = Math.floor(Math.random() * 2) + 2; // 2~3개
+    for (let i = 0; i < startCount; i++) {
+        spawnTile(-i * 150); // 간격도 살짝 넓게
+    }
 
-    // 🎯 처음엔 1개만 생성
-    spawnTile();
-
-    // 🎯 일정 간격으로 계속 생성 (초반엔 느리게 시작)
-    let baseInterval = 1200; // 1.2초마다 생성
-    spawnLoop = setInterval(() => {
-        // 점수에 따라 간격 점점 줄어듦 (최소 400ms까지)
-        baseInterval = Math.max(400, 1200 - score * 10);
-
-        // 루프 리셋 (간격 변경 적용)
-        clearInterval(spawnLoop);
-        spawnLoop = setInterval(arguments.callee, baseInterval);
-
-        // 새 타일 생성
-        spawnTile();
-    }, baseInterval);
-
+    startSpawnLoop();
     animationFrame = requestAnimationFrame(moveTiles);
 }
 
