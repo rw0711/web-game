@@ -6,7 +6,7 @@ const keysContainer = document.getElementById("keys");
 const easyBtn = document.getElementById("easy");
 const hardBtn = document.getElementById("hard");
 
-// 🎵 효과음
+// 효과음
 const hitSound = document.getElementById("hit-sound");
 hitSound.volume = 0.5;
 
@@ -17,10 +17,10 @@ let tileSpeed = 2.5;
 let spawnInterval = 800;
 let gameRunning = false;
 let activeTiles = [];
+let gameLoop = null;
 let animationFrame = null;
-let spawnTimeout = null;
 
-// 카운트다운 표시용
+// 카운트다운 표시
 const countdown = document.createElement("div");
 countdown.id = "countdown";
 countdown.style.position = "absolute";
@@ -57,6 +57,7 @@ function setDifficulty(level) {
     startCountdown(level);
 }
 
+
 function startCountdown(level) {
     let count = 3;
     countdown.style.display = "block";
@@ -78,8 +79,8 @@ function startCountdown(level) {
 
 function stopGame() {
     gameRunning = false;
+    clearInterval(gameLoop);
     cancelAnimationFrame(animationFrame);
-    clearTimeout(spawnTimeout);
 }
 
 function updateHearts() {
@@ -97,25 +98,26 @@ function startGame(level) {
     tileSpeed = 2.5;
     activeTiles = [];
 
-    for (let i = 0; i < 6; i++) spawnTile(-i * 120);
-    moveTiles();
-    spawnTilesContinuously();
-}
-
-// 🔁 타일 생성 루프 (중첩 setInterval 제거)
-function spawnTilesContinuously() {
-    if (!gameRunning) return;
-
-    // 일정 확률로 두 개 동시 스폰
-    const spawnCount = Math.random() < 0.3 ? 2 : 1;
-    for (let i = 0; i < spawnCount; i++) {
-        setTimeout(() => spawnTile(), Math.random() * 150);
+    // 🔹 시작할 때 너무 많이 생성되지 않게 조절
+    for (let i = 0; i < 3; i++) {
+        spawnTile(-i * 180);
     }
 
-    // 점수에 따라 생성 간격 점점 빨라짐
-    const nextInterval = Math.max(250, spawnInterval - score * 8);
+    startSpawnLoop();
+    animationFrame = requestAnimationFrame(moveTiles);
+}
 
-    spawnTimeout = setTimeout(spawnTilesContinuously, nextInterval);
+function startSpawnLoop() {
+    clearInterval(gameLoop);
+    gameLoop = setInterval(() => {
+        if (!gameRunning) return;
+
+        const spawnCount = Math.random() < 0.3 ? 2 : 1; 
+        for (let i = 0; i < spawnCount; i++) {
+            setTimeout(() => spawnTile(), Math.random() * 200);
+        }
+
+    }, spawnInterval);
 }
 
 function spawnTile(initialTop = -100) {
@@ -151,12 +153,17 @@ function moveTiles() {
             activeTiles.splice(i, 1);
             heartCount--;
             updateHearts();
-            if (heartCount <= 0) return endGame();
+            if (heartCount <= 0) endGame();
         }
     }
 
-    // 점수에 따라 속도 상승
-    tileSpeed = 2.5 + score * 0.05;
+    // 🔹 점수에 따라 속도와 스폰 간격 점점 빨라짐
+    tileSpeed = 2.5 + score * 0.04;
+    spawnInterval = Math.max(250, 800 - score * 10);
+
+    clearInterval(gameLoop);
+    startSpawnLoop();
+
     animationFrame = requestAnimationFrame(moveTiles);
 }
 
@@ -179,7 +186,6 @@ document.addEventListener("keydown", e => {
     if (tileRect.bottom >= zoneRect.top && tileRect.top <= zoneRect.bottom) {
         score++;
         scoreDisplay.textContent = `점수: ${score}`;
-        hitSound.pause(); // 🔇 중복 방지
         hitSound.currentTime = 0;
         hitSound.play();
         tile.remove();
