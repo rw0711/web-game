@@ -45,6 +45,15 @@ function setDifficulty(level) {
     scoreDisplay.textContent = "점수: 0";
     tileContainer.innerHTML = "";
     keysContainer.innerHTML = keys.map(k => `<div class="key">${k}</div>`).join("");
+    
+    // ✅ 사용자 클릭 시 오디오 권한 활성화용
+    hitSound.volume = 0;
+    hitSound.play().then(() => {
+        hitSound.pause();
+        hitSound.currentTime = 0;
+        hitSound.volume = 0.5; // 원래 볼륨 복원
+    });
+
     startCountdown(level);
 }
 
