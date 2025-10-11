@@ -39,7 +39,7 @@ function setDifficulty(level) {
     heartCount = level === "easy" ? 5 : 3;
     score = 0;
     tileSpeed = 2.5;
-    spawnInterval = Math.max(400, 900 - score * 10);
+    spawnInterval = 800;
     activeTiles = [];
     updateHearts();
     scoreDisplay.textContent = "점수: 0";
@@ -97,10 +97,9 @@ function startGame(level) {
     tileSpeed = 2.5;
     activeTiles = [];
 
-    // 🎯 시작 시 자연스럽게 2~3개만 생성
-    const startCount = Math.floor(Math.random() * 2) + 2; // 2~3개
-    for (let i = 0; i < startCount; i++) {
-        spawnTile(-i * 150); // 간격도 살짝 넓게
+    // 🔹 시작할 때 너무 많이 생성되지 않게 조절
+    for (let i = 0; i < 3; i++) {
+        spawnTile(-i * 180);
     }
 
     startSpawnLoop();
