@@ -13,7 +13,7 @@ hitSound.volume = 0.5;
 let keys = [];
 let heartCount = 5;
 let score = 0;
-let tileSpeed = 2.5;
+let tileSpeed = 1.8;
 let spawnInterval = 800;
 let gameRunning = false;
 let activeTiles = [];
@@ -85,7 +85,7 @@ function endGame() {
 
 function startGame(level) {
     gameRunning = true;
-    tileSpeed = 2.5;
+    tileSpeed = 1.8;
     activeTiles = [];
 
     for (let i = 0; i < 6; i++) spawnTile(-i * 120);
@@ -147,7 +147,7 @@ function moveTiles() {
     }
 
     // 점수에 따라 속도 상승
-    tileSpeed = 2.5 + score * 0.05;
+    tileSpeed = 1.8 + score * 0.03;
     animationFrame = requestAnimationFrame(moveTiles);
 }
 
