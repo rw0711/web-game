@@ -1,172 +1,33 @@
-    <!DOCTYPE html>
-    <html lang="ko">
-    <head>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dot Drop Text</title>
-
-    <!-- Google Fonts 예시 (원하면 다른 폰트로 교체 가능) -->
-    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-
-    <style>
-    body {
-        background: #111;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        font-family: 'Black Han Sans', sans-serif;
-        overflow-x: hidden;
-    }
-
-    .container {
-        text-align: center;
-        width: 100%;
-        max-width: 900px;
-        padding: 20px;
-    }
-
-    input {
-        font-size: 5vw;           /* 화면 크기에 따라 자동 조절 */
-        max-font-size: 40px;
-        padding: 10px 20px;
-        width: 80%;
-        border-radius: 10px;
-    }
-
-    button {
-        font-size: 5vw;
-        max-font-size: 40px;
-        padding: 10px 25px;
-        margin-top: 20px;
-        border-radius: 10px;
-        background: white;
-        color: black;
-        font-weight: bold;
-    }
-
-    #output {
-        margin-top: 40px;
-        word-break: break-word;
-    }
-
-    .letter {
-        position: relative;
-        display: inline-block;
-        font-size: 10vw;          /* 모바일에서도 크게 보임 */
-        max-font-size: 100px;
-        opacity: 0;
-        line-height: 1;
-    }
-
-    .dot {
-        position: absolute;
-        width: 1.4vw;
-        height: 1.4vw;
-        max-width: 12px;
-        max-height: 12px;
-        background: white;
-        opacity: 0;
-        animation: fall 0.5s ease forwards;
-    }
-
-    @keyframes fall {
-        0% {
-        transform: translateY(-100px);
-        opacity: 0;
-        }
-        70% {
-        opacity: 1;
-        }
-        100% {
-        transform: translateY(0);
-        }
-    }
-
-    #heart {
-        font-size: 18vw;          /* 모바일에서도 크게 */
-        max-font-size: 150px;
-        opacity: 0;
-        transform: scale(0.5);
-        transition: 0.5s;
-        margin-top: 20px;
-    }
-    #heart.show {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    /* 작은 화면(모바일)에서 추가 조절 */
-    @media (max-width: 600px) {
-        input, button {
-        font-size: 6vw;
-        }
-        .letter {
-        font-size: 14vw;
-        }
-        #heart {
-        font-size: 22vw;
-        }
-    }
-
-    </style>
-    </head>
-    <body>
-
-    <div class="container">
-    <input id="textInput" type="text" placeholder="문장을 입력하세요">
-    <br>
-    <button onclick="makeText()">출력</button>
-
-    <div id="output"></div>
-    <div id="heart">❤️</div>
+    <title>🎹피아노 타일</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>🎹 피아노 타일</h1>
+    <div id="instructions">
+        <p>🎵 키보드로 타일을 눌러 점수를 얻으세요!</p>
+        <p>🟢 쉬움: A, S, D, F | 🔴 어려움: A, S, D, F, H, J, K, L</p>
+        <p>❤️ 타일을 놓치면 하트가 하나 깎입니다. 하트가 0이 되면 게임 오버!</p>
     </div>
 
-    <script>
-    function makeText() {
-    const text = document.getElementById("textInput").value;
-    const output = document.getElementById("output");
-    const heart = document.getElementById("heart");
+    <div id="difficulty-select">
+        <button id="easy">쉬움</button>
+        <button id="hard">어려움</button>
+    </div>
 
-    output.innerHTML = "";
-    heart.classList.remove("show");
-
-    let delay = 0;
-
-    [...text].forEach((char) => {
-        const span = document.createElement("span");
-        span.className = "letter";
-        span.textContent = char;
-
-        output.appendChild(span);
-
-        // 도트 20개 생성
-        for (let d = 0; d < 20; d++) {
-        const dot = document.createElement("div");
-        dot.className = "dot";
-
-        dot.style.left = (Math.random() * 60 - 30) + "px";
-        dot.style.animationDelay = (delay + Math.random() * 0.2) + "s";
-
-        span.appendChild(dot);
-        }
-
-        setTimeout(() => {
-        span.style.opacity = 1;
-        }, delay * 1000 + 300);
-
-        delay += 0.25;
-    });
-
-    // 마지막에 하트 등장
-    setTimeout(() => {
-        heart.classList.add("show");
-    }, delay * 1000 + 300);
-    }
-    </script>
-
-    </body>
-    </html>
+    <div id="game-container">
+        <div id="hearts"></div>
+        <div id="score">점수: 0</div>
+        <div id="tile-container"></div>
+        <div id="key-zone"></div>
+        <div id="keys"></div>
+    </div>
+    
+    <audio id="hit-sound" src="hit.mp3" preload="auto"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
